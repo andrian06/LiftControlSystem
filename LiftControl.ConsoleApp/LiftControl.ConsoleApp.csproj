@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../LiftControl.Application/LiftControl.Application.csproj" />
+    <ProjectReference Include="../LiftControl.Infrastructure/LiftControl.Infrastructure.csproj" />
+    <ProjectReference Include="../LiftControl.Domain/LiftControl.Domain.csproj" />
+  </ItemGroup>
+</Project>

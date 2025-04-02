@@ -1,0 +1,69 @@
+﻿@page "/dashboard"
+@using LiftControl.Shared
+@inject HttpClient Http
+
+<h3 class="text-center mt-4">Lift Control Dashboard</h3>
+
+@if (lifts.Count == 0)
+{
+    <p class="text-muted text-center">Waiting for simulation data...</p>
+}
+else
+{
+    
+    <div class="lift-grid">
+        @foreach (var lift in lifts)
+        {
+            <div class="lift-card animate-refresh" @key="lift.LiftId + lift.CurrentFloor + string.Join(',', lift.Queue)">
+                <h5>@lift.LiftId</h5>
+                <p><strong>Floor:</strong> @lift.CurrentFloor</p>
+                <p><strong>IsInRoute:</strong> @lift.IsInRoute</p>
+                <p><strong>Direction:</strong> @lift.Direction</p>
+                <p><strong>Queue:</strong> @(lift.Queue.Count == 0 ? "None" : string.Join(", ", lift.Queue))</p>
+                <p><strong>Passengers:</strong> @(lift.Passengers.Count == 0 ? "None" : string.Join(", ", lift.Passengers))</p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<LiftSnapshot> lifts = new();
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSnapshot();
+        _ = Task.Run(PeriodicRefresh);
+    }
+
+    private async Task PeriodicRefresh()
+    {
+        while (true)
+        {
+            await InvokeAsync(async () =>
+            {
+                
+                await LoadSnapshot();
+                StateHasChanged();
+            });
+
+            await Task.Delay(3000);
+        }
+    }
+
+    private async Task LoadSnapshot()
+    {
+        try
+        {
+            var snapshot = await Http.GetFromJsonAsync<List<LiftSnapshot>>($"snapshot.json?t={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
+          
+            if (snapshot != null)
+                lifts = snapshot;
+        }
+        catch
+        {
+            // You could optionally log here
+        }
+    }
+}
+
