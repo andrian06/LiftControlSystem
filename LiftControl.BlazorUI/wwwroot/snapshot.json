@@ -1,27 +1,23 @@
 [
   {
     "LiftId": "LiftUnit-1",
-    "CurrentFloor": 1,
-    "Direction": "Up",
-    "IsInRoute": true,
-    "Queue": [
-      "9-\u003E8"
-    ],
+    "CurrentFloor": 10,
+    "Direction": "Idle",
+    "IsInRoute": false,
+    "Queue": [],
     "Passengers": []
   },
   {
     "LiftId": "LiftUnit-2",
-    "CurrentFloor": 1,
-    "Direction": "Up",
-    "IsInRoute": true,
-    "Queue": [
-      "7-\u003E10"
-    ],
+    "CurrentFloor": 3,
+    "Direction": "Idle",
+    "IsInRoute": false,
+    "Queue": [],
     "Passengers": []
   },
   {
     "LiftId": "LiftUnit-3",
-    "CurrentFloor": 1,
+    "CurrentFloor": 3,
     "Direction": "Idle",
     "IsInRoute": false,
     "Queue": [],
@@ -29,7 +25,7 @@
   },
   {
     "LiftId": "LiftUnit-4",
-    "CurrentFloor": 1,
+    "CurrentFloor": 4,
     "Direction": "Idle",
     "IsInRoute": false,
     "Queue": [],

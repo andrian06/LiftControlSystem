@@ -6,7 +6,7 @@ class Program
 {
     static async Task Main()
     {
-        bool runManualTest = false; // Set to false to run simulation
+        bool runManualTest = true; // Set to false to run simulation
 
         if (runManualTest)
             await ManualTest.Run();

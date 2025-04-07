@@ -73,5 +73,13 @@ namespace LiftControl.Config
         /// The idle bonus weight.
         /// </value>
         public static int IdleBonusWeight { get; set; } = -10;
+        /// <summary>
+        /// Gets or sets the near pickup bonus weight.
+        /// </summary>
+        /// <value>
+        /// The near pickup bonus weight.
+        /// </value>
+        public static int NearPickupBonusWeight { get; set; } = -7;
+
     }
 }

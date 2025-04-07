@@ -81,6 +81,11 @@ namespace LiftControl.Domain
                     continue;
                 }
 
+                if (nextStop != CurrentFloor)
+                {
+                    IsInRoute = true; 
+                }
+
                 // Handle stop if we are already at the right floor
                 if (nextStop == CurrentFloor)
                 {

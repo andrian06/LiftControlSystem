@@ -68,9 +68,16 @@ namespace LiftControl.Application
             if (lift.CurrentDirection == Direction.Down && lift.CurrentFloor < request.PickupFloor)
                 return int.MaxValue;
 
-            // Reject lift if it is already in route (has decided to move) — prevents late assignments
+            // Reject if the lift has already departed and the pickup is not along the way
             if (lift.IsInRoute)
-                return int.MaxValue;
+            {
+                bool isAlongTheWay = lift.CurrentDirection == request.Direction &&
+                                     ((request.Direction == Direction.Up && request.PickupFloor > lift.CurrentFloor) ||
+                                      (request.Direction == Direction.Down && request.PickupFloor < lift.CurrentFloor));
+
+                if (!isAlongTheWay)
+                    return int.MaxValue;
+            }
 
             // Perfect match: lift is idle and already at pickup floor
             if (lift.CurrentDirection == Direction.Idle && lift.CurrentFloor == request.PickupFloor && !lift.IsInRoute)
@@ -91,11 +98,18 @@ namespace LiftControl.Application
             int batchingBonus = (lift.CurrentDirection == request.Direction &&
                                 ((request.Direction == Direction.Up && request.PickupFloor >= lift.CurrentFloor) ||
                                  (request.Direction == Direction.Down && request.PickupFloor <= lift.CurrentFloor)))
-                                ? SimulationConfig.BatchingBonusWeight : 0;
+                                 ? SimulationConfig.BatchingBonusWeight : 0;
 
             int loadPenalty = load * SimulationConfig.LoadPenaltyWeight;
 
-            return distance + loadPenalty + batchingBonus + idleBonus;
+            // New logic: bonus if this lift is already stopping near the pickup floor
+            bool hasNearbyStop = lift.Queue.Concat(lift.Passengers)
+                .Any(p => Math.Abs(p.DestinationFloor - request.PickupFloor) <= 1 ||
+                          Math.Abs(p.PickupFloor - request.PickupFloor) <= 1);
+
+            int nearPickupBonus = hasNearbyStop ? SimulationConfig.NearPickupBonusWeight : 0;
+
+            return distance + loadPenalty + batchingBonus + idleBonus + nearPickupBonus;
         }
 
 
